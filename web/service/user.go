@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"study-go/web/config"
 	"study-go/web/model"
 	"time"
 )
@@ -17,7 +18,7 @@ type UserService interface {
 type UserServiceImpl struct {
 }
 
-func NewUserService() (UserService, error) {
+func NewUserService(cfg *config.Config) (UserService, error) {
 	return &UserServiceImpl{}, nil
 }
 

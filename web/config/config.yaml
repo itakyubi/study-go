@@ -1,0 +1,2 @@
+adminServer:
+  port: ":8018"

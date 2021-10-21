@@ -5,23 +5,26 @@ import (
 	"net/http"
 	"study-go/web/api"
 	"study-go/web/common"
+	"study-go/web/config"
 )
 
 type AdminServer struct {
 	router *gin.Engine
 	server *http.Server
 	api    *api.API
+	cfg    *config.Config
 }
 
-func NewAdminServer() (*AdminServer, error) {
+func NewAdminServer(cfg *config.Config) (*AdminServer, error) {
 	router := gin.New()
 	server := &http.Server{
-		Addr:    ":8008",
+		Addr:    cfg.AdminServer.Port,
 		Handler: router,
 	}
 	return &AdminServer{
 		router: router,
 		server: server,
+		cfg:    cfg,
 	}, nil
 }
 
