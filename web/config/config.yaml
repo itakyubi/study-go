@@ -1,2 +1,9 @@
 adminServer:
   port: ":8018"
+
+database:
+  type: "mysql"
+  url: "root:199410@(127.0.0.1:3306)/test?charset=utf8&loc=Asia%2FShanghai&parseTime=true"
+
+plugin:
+  user: "database"

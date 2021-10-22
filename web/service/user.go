@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"study-go/web/config"
 	"study-go/web/model"
-	"time"
+	"study-go/web/plugin"
 )
 
 type UserService interface {
@@ -16,46 +16,46 @@ type UserService interface {
 }
 
 type UserServiceImpl struct {
+	user plugin.User
 }
 
 func NewUserService(cfg *config.Config) (UserService, error) {
-	return &UserServiceImpl{}, nil
+	user, err := plugin.GetPlugin(cfg.Plugin.User)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UserServiceImpl{
+		user: user.(plugin.User),
+	}, nil
 }
 
 func (u UserServiceImpl) Add(user *model.User) (int, error) {
 	s := fmt.Sprintf("add user, name=%s, age=%d", user.Name, user.Age)
 	println(s)
-	return int(time.Now().Unix()), nil
+	return u.user.AddUser(user)
 }
 
 func (u UserServiceImpl) Delete(id int) error {
 	s := fmt.Sprintf("delete user, id=%d", id)
 	println(s)
-	return nil
+	return u.user.DeleteUser(id)
 }
 
 func (u UserServiceImpl) Update(user *model.User) error {
 	s := fmt.Sprintf("update user, id=%d, name=%s, age=%d", user.Id, user.Name, user.Age)
 	println(s)
-	return nil
+	return u.user.UpdateUser(user)
 }
 
 func (u UserServiceImpl) Get(id int) (*model.User, error) {
 	s := fmt.Sprintf("get user by id, id=%d", id)
 	println(s)
-	return &model.User{
-		Id:   id,
-		Name: string(time.Now().Second()),
-		Age:  time.Now().Second(),
-	}, nil
+	return u.user.GetUser(id)
 }
 
 func (u UserServiceImpl) GetByName(name string) (*model.User, error) {
 	s := fmt.Sprintf("get user by name, name=%s", name)
 	println(s)
-	return &model.User{
-		Id:   time.Now().Second(),
-		Name: name,
-		Age:  time.Now().Second(),
-	}, nil
+	return u.user.GetUserByName(name)
 }
