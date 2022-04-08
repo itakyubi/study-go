@@ -1,0 +1,27 @@
+devices:
+- name: wa-test
+  delta:
+    qos: 1
+    topic: $baetyl/device/wa-test/delta
+  report:
+    qos: 1
+    topic: $baetyl/device/wa-test/report
+  event:
+    qos: 1
+    topic: $baetyl/device/wa-test/event
+  get:
+    qos: 1
+    topic: $baetyl/device/wa-test/get
+  getResponse:
+    qos: 1
+    topic: $baetyl/device/wa-test/getResponse
+driver: |
+  - name: ipc
+    fps: 1
+    imageFormat: jpg
+    address: http://127.0.0.1:8000
+    request:
+      params:
+        threshold: "0"
+    body:
+      imageName: image

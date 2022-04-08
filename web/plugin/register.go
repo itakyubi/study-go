@@ -2,8 +2,10 @@ package plugin
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"strings"
+	"study-go/web/log"
 	"sync"
 )
 
@@ -18,11 +20,11 @@ var plugins sync.Map
 
 func RegisterFactory(name string, f Factory) {
 	if _, ok := pluginFactory.Load(name); ok {
-		println(fmt.Sprintf("plugin {%s} already exists, skip", name))
+		log.L().Info("plugin already exists, skip", log.Any("plugin", name))
 		return
 	}
 	pluginFactory.Store(name, f)
-	println(fmt.Sprintf("plugin {%s} registered", name))
+	log.L().Info("plugin is registered", log.Any("plugin", name))
 }
 
 func GetPlugin(name string) (Plugin, error) {
@@ -33,13 +35,12 @@ func GetPlugin(name string) (Plugin, error) {
 
 	f, ok := pluginFactory.Load(name)
 	if !ok {
-		println(fmt.Sprintf("plugin {%s} not found", name))
-		return nil, nil
+		return nil, errors.New(fmt.Sprintf("plugin {%s} not found", name))
 	}
 
 	p, err := f.(Factory)()
 	if err != nil {
-		println(fmt.Sprintf("create plugin {%s} failed.", name))
+		log.L().Error("failed to create plugin", log.Error(err))
 		return nil, err
 	}
 
@@ -47,7 +48,7 @@ func GetPlugin(name string) (Plugin, error) {
 	if ok {
 		err := p.Close()
 		if err != nil {
-			println(fmt.Sprintf("close plugin {%s} failed.", name))
+			log.L().Warn("failed to close plugin", log.Error(err))
 		}
 		return act.(Plugin), nil
 	}

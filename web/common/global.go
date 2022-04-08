@@ -1,23 +1,19 @@
 package common
 
 import (
-	"flag"
 	"github.com/gin-contrib/cache/persistence"
 	"time"
 )
 
 const (
 	ConfFile        = "ConfFile"
-	DefaultConfFile = "./web/config/config.yaml"
+	DefaultConfFile = "./web/etc/conf.yml"
 )
 
 var cache = persistence.NewInMemoryStore(time.Minute * 10)
 
-func init() {
-	var configFile string
-	flag.StringVar(&configFile, "c", "./web/config/config.yaml", "the configuration file")
-	flag.Parse()
-	cache.Set(ConfFile, configFile, -1)
+func SetConfFile(v string) {
+	cache.Set(ConfFile, v, -1)
 }
 
 func GetConfFile() string {

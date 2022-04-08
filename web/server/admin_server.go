@@ -1,42 +1,54 @@
 package server
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"study-go/web/api"
 	"study-go/web/common"
 	"study-go/web/config"
+	"study-go/web/log"
 )
 
 type AdminServer struct {
+	cfg    *config.Config
 	router *gin.Engine
 	server *http.Server
 	api    *api.API
-	cfg    *config.Config
+	log    *log.Logger
 }
 
 func NewAdminServer(cfg *config.Config) (*AdminServer, error) {
 	router := gin.New()
 	server := &http.Server{
-		Addr:    cfg.AdminServer.Port,
-		Handler: router,
+		Addr:           cfg.AdminServer.Port,
+		Handler:        router,
+		ReadTimeout:    cfg.AdminServer.ReadTimeout,
+		WriteTimeout:   cfg.AdminServer.WriteTimeout,
+		MaxHeaderBytes: 1 << 20,
 	}
 	return &AdminServer{
+		cfg:    cfg,
 		router: router,
 		server: server,
-		cfg:    cfg,
+		log:    log.L().With(log.Any("server", "AdminServer")),
 	}, nil
 }
 
 func (s *AdminServer) Run() {
 	err := s.server.ListenAndServe()
 	if err != nil {
-		println(err.Error())
+		log.L().Info("admin server stopped", log.Error(err))
 	}
 }
 
 func (s *AdminServer) SetAPI(api *api.API) {
 	s.api = api
+}
+
+func (s *AdminServer) Close() {
+	ctx, _ := context.WithTimeout(context.Background(), s.cfg.AdminServer.ShutdownTime)
+	s.server.Shutdown(ctx)
 }
 
 func (s *AdminServer) InitRoute() {

@@ -3,8 +3,10 @@ package database
 import (
 	"database/sql"
 	"github.com/jmoiron/sqlx"
+	"github.com/pkg/errors"
 	"io"
-	"study-go/web/config"
+	"study-go/web/common"
+	"study-go/web/log"
 	"study-go/web/plugin"
 	"time"
 )
@@ -23,6 +25,7 @@ type DBStorage interface {
 type DB struct {
 	db  *sqlx.DB
 	cfg Config
+	Log *log.Logger
 }
 
 func init() {
@@ -31,9 +34,9 @@ func init() {
 
 func New() (plugin.Plugin, error) {
 	var cfg Config
-	err := config.LoadConfig(&cfg)
+	err := common.LoadConfig(&cfg)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	return NewDB(cfg)
 }
@@ -41,7 +44,7 @@ func New() (plugin.Plugin, error) {
 func NewDB(cfg Config) (*DB, error) {
 	db, err := sqlx.Open(cfg.Database.Type, cfg.Database.URL)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	db.SetMaxOpenConns(cfg.Database.MaxOpenConns)
@@ -50,23 +53,26 @@ func NewDB(cfg Config) (*DB, error) {
 
 	err = db.Ping()
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	return &DB{
 		db:  db,
 		cfg: cfg,
+		Log: log.With(log.Any("plugin", "database")),
 	}, nil
 }
 
 func (d *DB) Close() (err error) {
 	err = d.db.Close()
+	err = errors.WithStack(err)
 	return
 }
 
 func (d *DB) Transaction(handler func(*sqlx.Tx) error) (err error) {
 	tx, err := d.db.Beginx()
 	if err != nil {
+		err = errors.WithStack(err)
 		return
 	}
 
@@ -82,6 +88,7 @@ func (d *DB) Transaction(handler func(*sqlx.Tx) error) (err error) {
 	}()
 
 	err = handler(tx)
+	err = errors.WithStack(err)
 	return
 }
 
@@ -100,6 +107,7 @@ func (d *DB) Query(tx *sqlx.Tx, sql string, data interface{}, args ...interface{
 	} else {
 		err = tx.Select(data, sql, args...)
 	}
+	err = errors.WithStack(err)
 	return
 }
 
@@ -113,7 +121,7 @@ func (d *DB) Commit(tx *sqlx.Tx) {
 	}
 	err := tx.Commit()
 	if err != nil {
-		println(err.Error())
+		log.Error(err)
 	}
 }
 
@@ -123,6 +131,6 @@ func (d *DB) Rollback(tx *sqlx.Tx) {
 	}
 	err := tx.Rollback()
 	if err != nil {
-		println(err.Error())
+		log.Error(err)
 	}
 }

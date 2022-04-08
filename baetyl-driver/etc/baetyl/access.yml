@@ -1,0 +1,6 @@
+wa-test:
+  custom: |
+    name: wa-test
+    streamAddress: rtsp://127.0.0.1:80/live/rtsp
+    serviceName: ipc
+    resultTopic: $baetyl/device/wa-test/result

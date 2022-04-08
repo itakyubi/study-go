@@ -1,0 +1,16 @@
+adminServer:
+  port: ":8018"
+
+database:
+  type: "mysql"
+  url: "root:199410@(127.0.0.1:3306)/test?charset=utf8&loc=Asia%2FShanghai&parseTime=true"
+
+plugin:
+  user: "database"
+
+logger:
+  filename: /Users/wuao/Desktop/test.log
+  level: debug
+  encoding: console
+#  encodeTime: "[2006/01/02 15:04:05 UTC]"
+#  encodeLevel: "[level]"
