@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/baetyl/baetyl-go/v2 v2.2.3
+	github.com/creasty/defaults v1.4.0
 	github.com/gin-contrib/cache v1.1.0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-sql-driver/mysql v1.5.0

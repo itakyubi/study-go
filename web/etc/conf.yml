@@ -12,5 +12,5 @@ logger:
   filename: /Users/wuao/Desktop/test.log
   level: debug
   encoding: console
-#  encodeTime: "[2006/01/02 15:04:05 UTC]"
-#  encodeLevel: "[level]"
+  encodeTime: "[2006/01/02 15:04:05 UTC]"
+  encodeLevel: "[level]"

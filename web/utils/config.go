@@ -20,6 +20,10 @@ func UnmarshalYAML(in []byte, out interface{}) error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+	err = SetDefaults(out)
+	if err != nil {
+		return errors.WithStack(err)
+	}
 	err = validator.Validate(out)
 	if err != nil {
 		return errors.WithStack(err)
