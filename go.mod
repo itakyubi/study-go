@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/alex-ant/gomath v0.0.0-20160516115720-89013a210a82
-	github.com/baetyl/baetyl-go/v2 v2.2.4-0.20220627070805-27195e7be426
+	github.com/baetyl/baetyl-go/v2 v2.2.4-0.20220706024343-6cf1a1b2a838
 	github.com/chfenger/goNum v0.0.0-20191211064013-a00d841c1e7b
 	github.com/creasty/defaults v1.4.0
 	github.com/crsmithdev/goexpr v0.0.0-20150309021426-69a8c42346f1
