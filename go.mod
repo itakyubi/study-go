@@ -5,7 +5,6 @@ go 1.14
 require (
 	github.com/alex-ant/gomath v0.0.0-20160516115720-89013a210a82
 	github.com/baetyl/baetyl-go/v2 v2.2.4-0.20220706024343-6cf1a1b2a838
-	github.com/chfenger/goNum v0.0.0-20191211064013-a00d841c1e7b
 	github.com/creasty/defaults v1.4.0
 	github.com/crsmithdev/goexpr v0.0.0-20150309021426-69a8c42346f1
 	github.com/gin-contrib/cache v1.1.0
@@ -16,7 +15,7 @@ require (
 	github.com/hybridgroup/mjpeg v0.0.0-20140228234708-4680f319790e
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/pkg/errors v0.9.1
-	github.com/u2takey/ffmpeg-go v0.4.0
+	github.com/u2takey/ffmpeg-go v0.4.1
 	go.uber.org/zap v1.19.1
 	gocv.io/x/gocv v0.25.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
